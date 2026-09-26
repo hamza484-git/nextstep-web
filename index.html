@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title>NextStep — figure out what to do next</title>
+  <meta name="description" content="A calm decision assistant for when life gets complicated." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-mode="idle">
+  <div class="ambient" aria-hidden="true">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+    <div class="grain"></div>
+  </div>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="topbar" role="banner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 12h10"/><path d="M10 6l6 6-6 6"/>
+        </svg>
+      </span>
+      <span class="brand-name">NextStep</span>
+    </div>
+    <div class="topbar-actions">
+      <button id="btn-new" class="btn-ghost" type="button">New situation</button>
+    </div>
+  </header>
+
+  <main id="main" class="main" role="main">
+    <!-- ============ INPUT VIEW ============ -->
+    <section id="view-input" class="view" aria-labelledby="input-heading">
+      <h1 id="input-heading" class="view-title">What's going on?</h1>
+      <p class="view-sub">Write it however you want. Hinglish is fine. Long is fine.</p>
+      <form id="form-situation" class="form" novalidate>
+        <label class="visually-hidden" for="situation-text">Describe your situation</label>
+        <textarea id="situation-text" name="text" rows="6" required
+                  placeholder="e.g. Viva at 10am tomorrow, laptop won't boot, dad in hospital..."></textarea>
+        <div class="form-row">
+          <span id="draft-status" class="draft-status" aria-live="polite">Draft saved locally.</span>
+          <button id="submit" type="submit" class="btn-primary">Get help</button>
+        </div>
+      </form>
+
+      <details class="try-scenarios">
+        <summary>Try one of the built-in scenarios</summary>
+        <div class="scenario-grid" id="scenario-buttons"></div>
+      </details>
+    </section>
+
+    <!-- ============ LOADING VIEW ============ -->
+    <section id="view-loading" class="view" hidden aria-labelledby="loading-heading">
+      <h1 id="loading-heading" class="view-title">Reading what you wrote…</h1>
+      <ol class="progress" aria-label="Progress">
+        <li id="p-read" class="progress-step active">
+          <span class="progress-icon" aria-hidden="true">•</span>
+          <span class="progress-text">Reading (1s)</span>
+        </li>
+        <li id="p-think" class="progress-step">
+          <span class="progress-icon" aria-hidden="true">•</span>
+          <span class="progress-text">Working out what matters (~5s)</span>
+        </li>
+        <li id="p-priorities" class="progress-step">
+          <span class="progress-icon" aria-hidden="true">•</span>
+          <span class="progress-text">Ordering priorities (~15s)</span>
+        </li>
+      </ol>
+      <div id="partial" class="partial" aria-hidden="true"></div>
+      <p class="tiny-help">You can leave this tab. When you come back your situation will still be here.</p>
+    </section>
+
+    <!-- ============ RESULT VIEW ============ -->
+    <section id="view-result" class="view" hidden aria-labelledby="result-heading">
+      <h1 id="result-heading" class="view-title">Here's what I see</h1>
+      <div id="summary" class="summary"></div>
+
+      <div id="uncertainty-bar" class="uncertainty" aria-live="polite" hidden></div>
+
+      <h2 class="section-h">Do this next</h2>
+      <div id="priorities" class="priorities" role="list"></div>
+
+      <details id="more" class="more" hidden>
+        <summary>Everything else I noticed</summary>
+        <div id="more-body"></div>
+      </details>
+
+      <h2 class="section-h" id="clarify-h" hidden>A few things I'm not sure about</h2>
+      <ul id="clarify" class="clarify" hidden></ul>
+
+      <div class="actions">
+        <button id="btn-update" class="btn-primary" type="button">Update the situation</button>
+        <button id="btn-worse" class="btn-danger-ghost" type="button">It got worse</button>
+      </div>
+    </section>
+
+    <!-- ============ CALM VIEW (scenario 4) ============ -->
+    <section id="view-calm" class="view calm" hidden aria-labelledby="calm-heading">
+      <h1 id="calm-heading" class="calm-heading">One thing at a time.</h1>
+      <p id="calm-note" class="calm-note"></p>
+      <div id="calm-action" class="calm-action"></div>
+      <div class="calm-resources">
+        <p>If you'd like to talk to someone right now:</p>
+        <a class="calm-link" href="tel:+919152987821">iCall — +91 91529 87821</a>
+        <span class="tiny-help">India · 8am–10pm · free</span>
+      </div>
+      <button id="btn-calm-continue" class="btn-ghost" type="button">I'm ready to think about the rest</button>
+    </section>
+
+    <!-- ============ ERROR VIEW ============ -->
+    <section id="view-error" class="view error-view" hidden aria-labelledby="error-heading">
+      <h1 id="error-heading" class="view-title">I couldn't finish that.</h1>
+      <p id="error-body" class="error-body"></p>
+      <div class="actions">
+        <button id="btn-retry" class="btn-primary" type="button">Try again</button>
+        <button id="btn-back" class="btn-ghost" type="button">Back to what you wrote</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- SR-only live region for polite summary announcements -->
+  <div id="a11y-live" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="mock-api.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
