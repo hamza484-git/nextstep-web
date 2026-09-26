@@ -8,6 +8,8 @@ A mobile-first web experience that turns a messy paragraph into one clear next s
 
 **Zero build step. Open `index.html` and it works.**
 
+**Live URL:** [https://nextstep-web-wine.vercel.app](https://nextstep-web-wine.vercel.app)
+
 ---
 
 ## TL;DR — what makes this submission different

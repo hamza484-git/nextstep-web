@@ -256,13 +256,14 @@
     //   ?fast=1     -> 2s mock latency
     //   ?slow=1     -> 25s mock latency
     //   ?err=1      -> force mock error
-    //   ?real=1     -> hit the real Agent FastAPI at http://localhost:8000
+    //   ?real=1     -> hit the real Agent FastAPI (local or prod)
     //   ?api=<url>  -> point at a custom backend URL
     const params = new URLSearchParams(location.search);
+    const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
     if (params.get("fast")) NextStepAPI.chaos.latency_ms = 2000;
     if (params.get("slow")) NextStepAPI.chaos.latency_ms = 25000;
     if (params.get("err"))  NextStepAPI.chaos.force_error = true;
-    if (params.get("real")) NextStepAPI.backend.url = "http://localhost:8000";
+    if (params.get("real")) NextStepAPI.backend.url = isLocal ? "http://localhost:8001" : "https://nextstep-agent.vercel.app";
     if (params.get("api"))  NextStepAPI.backend.url = params.get("api");
     if (NextStepAPI.backend.url) {
       const el = document.querySelector("#draft-status");
